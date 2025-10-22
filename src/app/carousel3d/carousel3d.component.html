@@ -1,0 +1,36 @@
+
+<img src="assets/carousel/main-backround.jpg" style="width: 100%; height: 80%; position: absolute;" alt="">
+<div id="contentContainer" class="trans3d" >
+  <section id="carouselContainer" class="trans3d">
+    <ng-container *ngFor="let item of sliderData; let i = index">
+	  <figure id="item{{i + 1}}" class="carouselItem trans3d">
+		<div class="carouselItemInner trans3d frame-card-color" [ngStyle]="{'background-image': 'url(' + item.img + ')', 'background-color': 'lightgray',  'background-size': 'cover', 
+  'background-position': 'center', 
+  'background-repeat': 'no-repeat'}">{{i + 1}}
+			<!-- <img src="{{item.img}}" style="width: 200px; height: 200px;" alt="">--> </div> 
+	  </figure>
+	</ng-container>
+    <!-- <figure id="item1" class="carouselItem trans3d">
+		<div class="carouselItemInner trans3d frame-card-color" >1 dhiraj mathank</div>
+	</figure>
+
+    <figure id="item2" class="carouselItem trans3d ">
+		<div class="carouselItemInner trans3d frame-card-color">2 chind kheda</div>
+	</figure>
+
+    <figure id="item3" class="carouselItem trans3d">
+		<div class="carouselItemInner trans3d frame-card-color ">3</div>
+	</figure>
+
+
+    <figure id="item4" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">4</div></figure>
+    <figure id="item5" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">5</div></figure>
+    <figure id="item6" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color ">6</div></figure>
+    <figure id="item7" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color ">7</div></figure>
+    <figure id="item8" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color ">8</div></figure>
+    <figure id="item9" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">9</div></figure>
+    <figure id="item10" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">10</div></figure>
+    <figure id="item11" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">11</div></figure>
+    <figure id="item12" class="carouselItem trans3d"><div class="carouselItemInner trans3d frame-card-color">12</div></figure> -->
+  </section>
+</div>

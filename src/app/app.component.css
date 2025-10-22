@@ -1,0 +1,618 @@
+/* =======================================
+   1. ROOT VARIABLES & GLOBAL STYLES
+   ======================================= */
+:root {
+    /* New Dark Color Palette */
+    --dark-bg: #1a1d24;
+    --card-bg: #2a2d34;
+    --accent-color: #00bfa5; /* Vibrant Teal */
+    --accent-color-dark: #00a08b;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaaaaa;
+    
+    /* New Fonts */
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Lato', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* NOTE: In Angular, component styles are "scoped". 
+  Applying styles to 'body' here won't work.
+  These global styles (like body, html) should be in your
+  main 'styles.css' file in the 'src/' folder of your Angular project.
+  I am leaving it here just to match your original file.
+*/
+body {
+    font-family: var(--font-body);
+    line-height: 1.7;
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+section {
+    padding: 6rem 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 2rem;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+h1 { font-size: 3.5rem; line-height: 1.2; }
+h2 { font-size: 2.8rem; text-transform: uppercase; }
+h3 { font-size: 1.5rem; color: var(--accent-color); }
+p { margin-bottom: 1rem; color: var(--text-secondary); }
+
+a {
+    text-decoration: none;
+    color: var(--accent-color);
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: var(--accent-color-dark);
+}
+
+/* =======================================
+   2. ANIMATIONS (Scroll & Hero)
+   ======================================= */
+
+/* -- Hero Slideshow Keyframes -- */
+@keyframes hero-fade {
+    0%, 20%, 100% { opacity: 0; }
+    5%, 15%      { opacity: 1; }
+}
+@keyframes ken-burns {
+    0%   { transform: scale(1.1) translate(0, 0); }
+    100% { transform: scale(1) translate(5px, 5px); }
+}
+
+/* -- Scroll-in Animation Classes -- */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    color: white;
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =======================================
+   3. HEADER & ANIMATED NAVIGATION
+   ======================================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: rgba(26, 29, 36, 0.8); /* Semi-transparent dark bg */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: top 0.3s ease;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+}
+
+.navbar .nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.navbar .nav-links li {
+    margin-left: 2rem;
+}
+
+.navbar .nav-links li a {
+    font-weight: 600;
+    color: var(--text-primary);
+    padding-bottom: 5px;
+    position: relative;
+}
+/* Animated underline effect */
+.navbar .nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+}
+.navbar .nav-links li a:hover::after {
+    width: 100%;
+}
+
+/* -- Animated "Toggle" Button (Hamburger) -- */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+    z-index: 1002;
+}
+.menu-toggle .bar {
+    height: 3px;
+    width: 100%;
+    background: var(--text-primary);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+/* Animate to 'X' */
+.menu-toggle.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+.menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* -- Animated Mobile Nav Overlay -- */
+.mobile-nav {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: -100%; /* Start off-screen */
+    width: 100%;
+    height: 100vh;
+    background: var(--dark-bg);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    transition: left 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 1001;
+}
+.mobile-nav.active {
+    left: 0;
+}
+.mobile-nav li {
+    margin: 2rem 0;
+}
+.mobile-nav li a {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+/* =======================================
+   4. HERO SECTION (Animated Slideshow)
+   ======================================= */
+#home {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 0;
+    overflow: hidden;
+}
+/* Slideshow container */
+.hero-slideshow .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: hero-fade 24s infinite, ken-burns 30s infinite alternate;
+}
+/* !! REPLACE THESE with your photos !! */
+.hero-slideshow .slide:nth-child(1) {
+    background-image: url('https://via.placeholder.com/1920x1080/aaa/808080?text=Your+Best+Wedding+Photo');
+    animation-delay: 0s, 0s;
+}
+.hero-slideshow .slide:nth-child(2) {
+    background-image: url('https://via.placeholder.com/1920x1080/bbb/808080?text=Your+Best+Event+Photo');
+    animation-delay: 8s, 0s;
+}
+.hero-slideshow .slide:nth-child(3) {
+    background-image: url('https://via.placeholder.com/1920x1080/ccc/808080?text=Your+Best+Portrait+Photo');
+    animation-delay: 16s, 0s;
+}
+
+/* Dark overlay for text readability */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)); */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 2rem;
+}
+#home h1 {
+    color: white;
+    font-weight: 800;
+}
+#home p {
+    font-size: 1.25rem;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+}
+/* New animated button style */
+.btn {
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--dark-bg);
+    padding: 0.8rem 2rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--accent-color-dark);
+    transition: width 0.3s ease;
+    z-index: -1;
+}
+.btn:hover {
+    color: var(--text-primary);
+}
+.btn:hover::before {
+    width: 100%;
+}
+
+/* =======================================
+   5. SERVICES (3D Flip Cards)
+   ======================================= */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+/* The container to set perspective */
+.service-box {
+    background-color: transparent;
+    height: 350px;
+    perspective: 1000px; /* 3D effect */
+    background: white;
+    box-shadow: 0px 0px 19px 7px #e0e0e0;
+}
+
+/* The inner element that flips */
+.service-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.7s;
+    transform-style: preserve-3d;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Hover to flip */
+.service-box:hover .service-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Front and Back panels */
+.service-card-front, .service-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    border-radius: 10px;
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Front side style */
+.service-card-front {
+    background: var(--card-bg);
+}
+
+/* Back side style */
+.service-card-back {
+    background: var(--accent-color);
+    color: var(--dark-bg);
+    transform: rotateY(180deg);
+}
+.service-card-back h3 {
+    color: var(--dark-bg);
+}
+.service-card-back p {
+    color: #222;
+}
+
+/* =======================================
+   6. PORTFOLIO (Animated Reveal)
+   ======================================= */
+#portfolio {
+    background: var(--dark-bg);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.portfolio-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease-out;
+}
+
+.portfolio-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 191, 165, 0.9), rgba(0, 191, 165, 0.7));
+    color: var(--dark-bg);
+    width: 100%;
+    padding: 1.5rem;
+    
+    /* Animation: starts off-screen at bottom */
+    transform: translateY(100%);
+    transition: transform 0.4s ease-out;
+}
+
+.portfolio-overlay h3 {
+    color: var(--dark-bg);
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+.portfolio-overlay p {
+    color: var(--card-bg);
+    margin-bottom: 0;
+}
+
+/* Hover animation */
+.portfolio-item:hover img {
+    transform: scale(1.1);
+}
+.portfolio-item:hover .portfolio-overlay {
+    transform: translateY(0);
+}
+
+/* =======================================
+   7. ABOUT SECTION
+   ======================================= */
+#about {
+    background: var(--card-bg);
+}
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-grid img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    filter: grayscale(30%);
+    transition: all 0.3s ease;
+}
+.about-grid img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.02);
+}
+
+.about-grid div {
+    text-align: left;
+}
+.about-grid h2 {
+    text-align: left;
+}
+
+/* =======================================
+   8. SHOP SECTION
+   ======================================= */
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.shop-item {
+    background: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    text-align: left;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.shop-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.shop-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.shop-item-content {
+    padding: 1.5rem 2rem;
+}
+
+/* =======================================
+   9. CONTACT SECTION
+   ======================================= */
+#contact {
+    background: var(--card-bg);
+}
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    background: var(--dark-bg);
+    padding: 3rem;
+    border-radius: 10px;
+}
+
+.contact-grid h2 {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #444;
+    background: var(--card-bg);
+    border-radius: 5px;
+    font-family: inherit;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+.contact-form input:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* =======================================
+   10. FOOTER
+   ======================================= */
+.footer {
+    background: #111;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+/* =======================================
+   11. RESPONSIVE DESIGN
+   ======================================= */
+@media (max-width: 992px) {
+    .services-grid,
+    .shop-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .portfolio-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .about-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    .about-grid img {
+        max-width: 400px;
+        margin: auto;
+    }
+    .about-grid h2, .contact-grid h2 {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    
+    .navbar {
+        padding: 1rem 1.5rem;
+    }
+    .navbar .nav-links {
+        display: none; /* Hide desktop links */
+    }
+    .menu-toggle {
+        display: flex; /* Show hamburger */
+    }
+    .mobile-nav {
+        display: flex; /* Enable mobile nav */
+    }
+    
+    .services-grid,
+    .portfolio-grid,
+    .shop-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+

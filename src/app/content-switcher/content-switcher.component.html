@@ -1,0 +1,49 @@
+<div class="content-switcher-container">
+    
+    <button class="control-btn prev-btn" (click)="goPrevious()" [disabled]="isAnimating">...</button>
+    <button class="control-btn next-btn" (click)="goNext()" [disabled]="isAnimating">...</button>
+
+    <div class="content-display">
+        <!-- <div 
+            *ngIf="contentItems[currentSlideIndex] as currentContent"
+            
+            [@slideAnimation]="{ 
+                value: animationTriggerValue, 
+                params: { 
+                    startX: getAnimationParams().enter.startX,
+                    startY: getAnimationParams().enter.startY,
+                    endX: getAnimationParams().leave.endX,
+                    endY: getAnimationParams().leave.endY
+                } 
+            }"
+            style="background-color: red;"
+            class="slide-content" 
+        > -->
+
+        <div 
+    *ngIf="contentItems[currentSlideIndex] as currentContent"
+    
+    [@slideAnimation]="{ 
+        value: animationTriggerValue, 
+        params: { 
+            startX: getAnimationParams().enter.startX,
+            startY: getAnimationParams().enter.startY,
+            endX: getAnimationParams().leave.endX,
+            endY: getAnimationParams().leave.endY
+        } 
+    }"
+    style="background-color: blue;"
+    class="slide-content" 
+>
+
+            <h2>{{ currentContent.title || 'Slide ' + currentContent.id }}</h2>
+            <p>{{ currentContent.description }}</p>
+            <img 
+                 *ngIf="currentContent.url" 
+                 [src]="currentContent.url" 
+                 [alt]="currentContent.title || 'Slide Image'" 
+                 class="slide-image"
+            >
+        </div>
+    </div>
+</div>
