@@ -17,6 +17,9 @@
             "baseHref": "/PhotoStudio/",
             "index": "src/index.html",
             "main": "src/main.ts",
+            "allowedCommonJsDependencies": [
+              "jquery"
+            ],
             "polyfills": [
               "zone.js"
             ],
