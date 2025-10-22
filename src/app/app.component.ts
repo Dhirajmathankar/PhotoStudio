@@ -109,6 +109,8 @@ mySlides = [
       this.leavingContent = this.contentItems[0];
       this.enteringContent = this.contentItems[0];
     }
+    this.checkScreenSize();
+    window.addEventListener('resize', () => this.checkScreenSize());
   }
 
   // --- Core Logic for Switching Content ---
@@ -150,5 +152,11 @@ mySlides = [
       newIndex = this.contentItems.length - 1; // Loop back to the end
     }
     this.switchContent(newIndex, 'prev');
+  }
+
+   showCarousel = true;
+    checkScreenSize() {
+    // 👇 768px से छोटी स्क्रीन पर component hide हो जाएगा
+    this.showCarousel = window.innerWidth > 768;
   }
 }

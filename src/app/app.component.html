@@ -30,9 +30,9 @@
 
 
 <main>
-<!-- <app-content-switcher [contentItems]="mySlides"></app-content-switcher> -->
+<!-- <app-content-switcher ></app-content-switcher> -->
 
-<app-carousel3d></app-carousel3d>
+<app-carousel3d *ngIf="showCarousel"></app-carousel3d>
 
 
     <section id="home" >

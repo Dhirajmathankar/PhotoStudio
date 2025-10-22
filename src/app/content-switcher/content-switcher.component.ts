@@ -1,5 +1,5 @@
 // src/app/content-switcher/content-switcher.component.ts
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , HostListener, Renderer2} from '@angular/core';
 import { trigger, state, style, transition, animate, group } from '@angular/animations';
 
 
@@ -152,180 +152,107 @@ import { trigger, state, style, transition, animate, group } from '@angular/anim
   // ]
 // ...
 
-animations: [
-    trigger('slideAnimation', [
-      
-      // 1. Entering Animation (:enter)
-      // Transition from a custom state (using parameters) TO the final active state
-      transition(':enter', [
-        
-        // Define STARTING style using parameters
-        style({ 
-          transform: 'translate({{ startX }}, {{ startY }})', 
-          opacity: 0,
-          zIndex: 3 
-        }),
-        
-        // Animate TO the final (center) position
-        animate('600ms ease-out', style({ 
-          transform: 'translate(0, 0)', 
-          opacity: 1 
-        }))
-      ], { 
-          // Default parameters (must be present)
-          params: { startX: '100%', startY: '-100%' } 
-      }), 
-
-      
-      // 2. Leaving Animation (:leave)
-      // Transition FROM the active state TO a custom state (using parameters)
-      transition(':leave', [
-        
-        // Animate FROM the current center position 
-        // TO the final exit position defined by parameters
-        animate('600ms ease-out', style({ 
-          transform: 'translate({{ endX }}, {{ endY }})', 
-          opacity: 0.2 
-        }))
-      ], { 
-          // Default parameters (must be present)
-          params: { endX: '-100%', endY: '100%' } 
-      }) 
-    ])
-  ]
-
-
 
 })
 export class ContentSwitcherComponent implements OnInit {
 
-  @Input() contentItems: any[] = [];
-  
-  currentSlideIndex: number = 0;
-  
-  // This state will trigger the animation (e.g., 'active', 'next', 'prev')
-  animationState: 'active' | 'next' | 'prev' = 'active';
+ index = 0;
+  movies: any[] = [];
+  transform: string[] = [];
+  zIndex: string[] = [];
 
-  constructor() { }
+  constructor(private renderer: Renderer2) {}
 
-  ngOnInit(): void {
-    if (this.contentItems.length === 0) {
-      console.warn("ContentSwitcherComponent: No content items provided.");
+  ngOnInit() {
+    // ✅ Hardcoded movie data (poster URL अपने हिसाब से बदल सकते हो)
+    this.movies = [
+      { Title: 'Inception', Year: '2010', Poster: 'assets/carousel/main-backround.jpg' },
+      { Title: 'Interstellar', Year: '2014', Poster: 'assets/carousel/main-backround.jpg' },
+      { Title: 'The Dark Knight', Year: '2008', Poster: 'assets/carousel/main-backround.jpg' },
+      { Title: 'Avatar', Year: '2009', Poster: 'assets/carousel/main-backround.jpg' },
+      { Title: 'Titanic', Year: '1997', Poster: 'assets/carousel/main-backround.jpg' }
+    ];
+
+    this.loadData();
+    this.mapStars();
+  }
+
+  loadData() {
+    const container = document.getElementById('slideContainer') as HTMLElement;
+    this.movies.forEach((movie, i) => {
+      this.transform.push(`translate3d(${i * 150}px, 0px, -${i * 1000}px)`);
+      this.zIndex.push(`-${i}`);
+
+      const slide = this.renderer.createElement('div');
+      const item = this.renderer.createElement('div');
+      const text = this.renderer.createElement('div');
+      const image = this.renderer.createElement('img');
+      const title = this.renderer.createElement('h1');
+      const year = this.renderer.createElement('h2');
+
+      this.renderer.addClass(slide, 'slide');
+      this.renderer.addClass(item, 'item');
+      this.renderer.addClass(image, 'img');
+      this.renderer.addClass(text, 'text');
+      this.renderer.addClass(title, 'title');
+      this.renderer.addClass(year, 'year');
+
+      image.src = movie.Poster;
+      image.alt = movie.Title;
+
+      title.innerText = movie.Title;
+      year.innerText = movie.Year;
+
+      this.renderer.appendChild(text, title);
+      this.renderer.appendChild(text, year);
+      this.renderer.appendChild(item, image);
+      this.renderer.appendChild(item, text);
+      this.renderer.appendChild(slide, item);
+      this.renderer.appendChild(container, slide);
+    });
+
+    this.showSlide(this.index);
+  }
+
+  onChange(toIndex: number) {
+    if (toIndex === 1) {
+      this.transform.unshift(this.transform[this.transform.length - 1]);
+      this.transform.pop();
+      this.zIndex.unshift(this.zIndex[this.zIndex.length - 1]);
+      this.zIndex.pop();
+    } else {
+      this.transform.push(this.transform[0]);
+      this.transform.shift();
+      this.zIndex.push(this.zIndex[0]);
+      this.zIndex.shift();
+    }
+    this.showSlide(this.index += toIndex);
+  }
+
+  showSlide(toIndex: number) {
+    const slides = document.getElementsByClassName('slide') as HTMLCollectionOf<HTMLElement>;
+    const texts = document.getElementsByClassName('text') as HTMLCollectionOf<HTMLElement>;
+
+    if (toIndex >= slides.length) this.index = 0;
+    if (toIndex < 0) this.index = slides.length - 1;
+
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.transform = this.transform[i];
+      slides[i].style.zIndex = this.zIndex[i];
+      texts[i].style.opacity = this.index === i ? '1' : '0';
     }
   }
 
-  // --- Core Logic for Switching Content ---
-  
- 
-  
-  animationDirection: 'next' | 'prev' = 'next'; 
-  
-  // ... (ngOnInit)
-
-  private switchContent1(newIndex: number, direction: 'next' | 'prev'): void {
-    if (newIndex === this.currentSlideIndex || this.contentItems.length === 0) {
-      return;
+  mapStars() {
+    const container = document.getElementById('starField') as HTMLElement;
+    for (let i = 0; i < window.innerWidth; i++) {
+      const star = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      star.setAttribute('cx', (Math.random() * window.innerWidth).toString());
+      star.setAttribute('cy', (Math.random() * window.innerHeight).toString());
+      star.setAttribute('fill', '#eee');
+      star.setAttribute('opacity', Math.random().toString());
+      star.setAttribute('r', (Math.random() + 1).toString());
+      container.appendChild(star);
     }
-    
-    // 1. Set the direction parameter BEFORE changing the index
-    this.animationDirection = direction;
-
-    // 2. Changing the index triggers *ngIf to remove the old element (:leave) 
-    //    and insert the new element (:enter) simultaneously.
-    setTimeout(() => {
-        this.currentSlideIndex = newIndex;
-    }, 50);
   }
-
-  // --- Core Logic: The `goNext` and `goPrevious` methods need to be updated ---
-  
-  goNext1(): void {
-    const newIndex = (this.currentSlideIndex + 1) % this.contentItems.length;
-    // We update animationDirection BEFORE calling switchContent
-    this.animationDirection = 'next';
-    this.switchContent(newIndex, 'next');
-  }
-
-  goPrevious1(): void {
-    let newIndex = this.currentSlideIndex - 1;
-    if (newIndex < 0) {
-      newIndex = this.contentItems.length - 1; 
-    }
-    // We update animationDirection BEFORE calling switchContent
-    this.animationDirection = 'prev';
-    this.switchContent(newIndex, 'prev');
-  }
-
-
-  // 🆕 NEW: Animation Lock Variable
-  isAnimating: boolean = false; 
-  
-  // Animation Duration (Must match the 600ms in the animate() function)
-  private animationDuration = 600; 
-
-  // ... (ngOnInit remains the same)
-
-  // ... (ngOnInit remains the same)
-
-  // 🆕 NEW: Variable to hold the unique trigger value for the HTML
-  animationTriggerValue: string = 'slide-0-next'; 
-
-  // ... (ngOnInit remains the same)
-
-// Check your switchContent method
-private switchContent(newIndex: number, direction: 'next' | 'prev'): void {
-    
-    if (this.isAnimating || newIndex === this.currentSlideIndex || this.contentItems.length === 0) {
-      return; 
-    }
-    
-    // 1. 🔒 LOCK and Set Direction
-    this.isAnimating = true;
-    this.animationDirection = direction;
-
-    // 2. 💥 UPDATE TRIGGER VALUE: Must happen before index change.
-    this.animationTriggerValue = `slide-${newIndex}-${direction}`;
-
-    // 3. UPDATE INDEX: This triggers the *ngIf and starts the animation.
-    this.currentSlideIndex = newIndex;
-    
-    // 4. 🔓 UNLOCK: After animation time.
-    setTimeout(() => {
-        this.isAnimating = false;
-    }, 600); // 👈 Check this time (must be 600ms)
-}
-  // --- goNext and goPrevious methods updated to set direction BEFORE switch ---
-  
-  goNext(): void {
-    const newIndex = (this.currentSlideIndex + 1) % this.contentItems.length;
-    this.isAnimating = false;
-    this.switchContent(newIndex, 'next');
-  }
-
-  goPrevious(): void {
-    let newIndex = this.currentSlideIndex - 1;
-    if (newIndex < 0) {
-      newIndex = this.contentItems.length - 1; 
-    }
-      this.isAnimating = false;
-    this.switchContent(newIndex, 'prev');
-  }
-
-  // --- A NEW method to calculate the dynamic parameters for HTML ---
-  
-  getAnimationParams(): any {
-    // next: New enters from Top-Right (100%, -100%) and Old leaves to Bottom-Left (-100%, 100%)
-    if (this.animationDirection === 'next') {
-      return { 
-        enter: { startX: '100%', startY: '-100%' }, 
-        leave: { endX: '-100%', endY: '100%' } 
-      };
-    } else { 
-      // prev: New enters from Bottom-Left (-100%, 100%) and Old leaves to Top-Right (100%, -100%)
-      return { 
-        enter: { startX: '-100%', startY: '100%' }, 
-        leave: { endX: '100%', endY: '-100%' } 
-      };
-    }
-}
 }

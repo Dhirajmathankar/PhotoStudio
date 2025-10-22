@@ -1,124 +1,141 @@
-/* src/app/content-switcher/content-switcher.component.css */
+@import url("https://fonts.googleapis.com/css?family=Bungee+Hairline");
 
-/* --- Base Container --- */
-.content-switcher-container {
-    position: relative;
-    width: 100%;
-    height: 60vh; /* Viewport height for a larger content area */
-    overflow: hidden; 
-    background-color: #f8f8f8;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin: 20px 0;
+html, body {
+  padding: 0;
+  margin: 0;
+  max-height: 100vh;
+  overflow-x: hidden;
+  font-size: 16px;
+  font-family: "Bungee Hairline", cursive;
 }
 
-/* --- Controls (Responsive) --- */
-.control-btn {
-    position: absolute; /* Changed to absolute to be relative to container */
-    z-index: 100;
-    padding: 10px 15px; /* Slightly wider buttons */
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 28px; /* Larger icons */
-    border-radius: 5px; /* Square with rounded corners */
-    transition: background 0.3s, transform 0.2s;
-    display: flex; /* For material icons alignment */
-    align-items: center;
-    justify-content: center;
+body {
+  background-color: #112;
 }
 
-.control-btn:hover {
-    background: rgba(0, 0, 0, 0.8);
-    transform: scale(1.05);
+.button {
+  height: 56px;
+  width: 56px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+  outline: none;
+  transition: all 300ms;
+  background-color: white;
 }
 
-.control-btn .material-icons {
-    font-size: inherit; /* Ensure icon scales with button font-size */
+.button:hover {
+  transform: scale(1.1);
 }
 
-/* Previous button (Top-Left) */
-.prev-btn {
-    top: 20px;
-    left: 20px;
+#backButton {
+  background: white url("https://firebasestorage.googleapis.com/v0/b/chris-rohr.appspot.com/o/codepen%2FGalactic_Empire_emblemIcon.png?alt=media&token=e00975c9-4f10-40fc-862a-3d8ecdc6ad02") no-repeat center;
+  background-size: 48px 48px;
 }
 
-/* Next button (Bottom-Right, to match the diagonal animation) */
-.next-btn {
-    bottom: 20px;
-    right: 20px;
+#nextButton {
+  background: white url("https://firebasestorage.googleapis.com/v0/b/chris-rohr.appspot.com/o/codepen%2FRebel_Alliance_logoIcon.png?alt=media&token=ffd9eccf-ed00-4556-bd53-d82832cca412") no-repeat center;
+  background-size: 48px 48px;
 }
 
-/* --- Content Display Area --- */
-.content-display {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Crucial for clipping the entering/leaving content */
+.buttonContainer {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: calc(50% - 56px/2);
+  width: calc(100% - 256px);
+  padding: 0 128px;
+  z-index: 1;
 }
 
-/* Individual slide content styling */
-.slide-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 40px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: white; /* Content background */
-    color: #333;
-    font-family: 'Georgia', serif; /* A more elegant font */
+@media only screen and (max-width: 1200px) {
+  .buttonContainer {
+    top: calc(90% - 56px);
+    padding: 0 32px;
+    width: calc(100% - 64px);
+  }
 }
 
-.slide-content h2 {
-    font-size: 3em;
-    margin-bottom: 15px;
-    color: #2c3e50;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+.container {
+  margin: auto;
+  height: 100%;
+  width: 100%;
 }
 
-.slide-content p {
-    font-size: 1.2em;
-    max-width: 70%;
-    line-height: 1.5;
-    color: #555;
+.img {
+  margin: auto 16px;
+  object-fit: contain;
+  transition: transform 300ms;
 }
 
-.slide-image {
-    max-width: 80%;
-    max-height: 60%;
-    object-fit: contain; /* Ensure full image is visible */
-    margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+.img:hover {
+  transform: scale(1.1);
 }
 
-/* Responsive adjustments for buttons */
-@media (max-width: 768px) {
-    .control-btn {
-        padding: 8px 12px;
-        font-size: 22px;
-    }
-    .prev-btn {
-        top: 10px;
-        left: 10px;
-    }
-    .next-btn {
-        bottom: 10px;
-        right: 10px;
-    }
-    .slide-content h2 {
-        font-size: 2em;
-    }
-    .slide-content p {
-        font-size: 1em;
-        max-width: 90%;
-    }
+.item {
+  height: 90%;
+  width: 90%;
+}
+
+.slide {
+  position: absolute;
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  transition: transform 500ms;
+}
+
+.slideContainer {
+  height: calc(100vh - 32px);
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  perspective: 5000px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .slideContainer { perspective: 3000px; }
+}
+
+@media only screen and (max-width: 600px) {
+  .slideContainer { perspective: 1500px; }
+}
+
+#starField {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+}
+
+.text {
+  padding: 0 16px;
+  transition: opacity 1s;
+}
+
+.title {
+  font-size: 2rem;
+  color: white;
+  line-height: 2rem;
+}
+
+.year {
+  font-size: 1.5rem;
+  color: white;
+  opacity: 0.8;
+}
+
+@media only screen and (max-width: 600px) {
+  .title {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+  .year {
+    font-size: 1rem;
+  }
 }

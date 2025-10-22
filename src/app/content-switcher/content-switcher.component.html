@@ -1,49 +1,39 @@
-<div class="content-switcher-container">
-    
-    <button class="control-btn prev-btn" (click)="goPrevious()" [disabled]="isAnimating">...</button>
-    <button class="control-btn next-btn" (click)="goNext()" [disabled]="isAnimating">...</button>
+<div id="container" class="container">
+  <svg id="starField"></svg>
 
-    <div class="content-display">
-        <!-- <div 
-            *ngIf="contentItems[currentSlideIndex] as currentContent"
-            
-            [@slideAnimation]="{ 
-                value: animationTriggerValue, 
-                params: { 
-                    startX: getAnimationParams().enter.startX,
-                    startY: getAnimationParams().enter.startY,
-                    endX: getAnimationParams().leave.endX,
-                    endY: getAnimationParams().leave.endY
-                } 
-            }"
-            style="background-color: red;"
-            class="slide-content" 
-        > -->
+ 
 
-        <div 
-    *ngIf="contentItems[currentSlideIndex] as currentContent"
-    
-    [@slideAnimation]="{ 
-        value: animationTriggerValue, 
-        params: { 
-            startX: getAnimationParams().enter.startX,
-            startY: getAnimationParams().enter.startY,
-            endX: getAnimationParams().leave.endX,
-            endY: getAnimationParams().leave.endY
-        } 
-    }"
-    style="background-color: blue;"
-    class="slide-content" 
->
+  <div id="slideContainer" class="slideContainer">
+    <div
+      class="slide"
+      *ngFor="let movie of movies; let i = index"
+      [style.transform]="transform[i]"
+      [style.zIndex]="zIndex[i]">
 
-            <h2>{{ currentContent.title || 'Slide ' + currentContent.id }}</h2>
-            <p>{{ currentContent.description }}</p>
-            <img 
-                 *ngIf="currentContent.url" 
-                 [src]="currentContent.url" 
-                 [alt]="currentContent.title || 'Slide Image'" 
-                 class="slide-image"
-            >
+      <div class="item">
+        <img class="img" [src]="movie.Poster" [alt]="movie.Title" />
+        <div class="text" [style.opacity]="index === i ? 1 : 0">
+          <h1 class="title">{{ movie.Title }}</h1>
+          <h2 class="year">{{ movie.Year }}</h2>
         </div>
+      </div>
     </div>
+  </div>
+
+
+   <div class="buttonContainer">
+    <button
+      id="backButton"
+      (click)="onChange(-1)"
+      class="button"
+      aria-label="back_button">
+    </button>
+
+    <button
+      id="nextButton"
+      (click)="onChange(1)"
+      class="button"
+      aria-label="next_button">
+    </button>
+  </div>
 </div>
